@@ -806,3 +806,141 @@ body {
   border-radius: 30px;
   display: inline-block;
 }
+
+/* Ночной режим */
+body.night-mode {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+body.night-mode .header {
+  background-color: #0d0d1a;
+}
+
+body.night-mode .header__logo {
+  color: #c8a86b;
+}
+
+body.night-mode .header__nav a {
+  color: #e0e0e0;
+}
+
+body.night-mode .header__nav a:hover {
+  color: #c8a86b;
+}
+
+body.night-mode .service-card {
+  background-color: #2a2a4a;
+  color: #e0e0e0;
+}
+
+body.night-mode .service-card__body {
+  background-color: #2a2a4a;
+}
+
+body.night-mode .service-card__title {
+  color: #c8a86b;
+}
+
+body.night-mode .service-card__desc {
+  color: #b0b0b0;
+}
+
+body.night-mode .service-card__category {
+  color: #c8a86b;
+}
+
+body.night-mode .service-card__price {
+  color: #c8a86b;
+}
+
+body.night-mode .footer {
+  background-color: #0d0d1a;
+}
+
+body.night-mode .footer__title {
+  color: #c8a86b;
+}
+
+body.night-mode .footer__links a {
+  color: #b0b0b0;
+}
+
+body.night-mode .footer__links a:hover {
+  color: #c8a86b;
+}
+
+body.night-mode .footer__address {
+  color: #b0b0b0;
+}
+
+body.night-mode .footer__bottom {
+  border-top-color: #2a2a4a;
+}
+
+body.night-mode .modal {
+  background-color: #2a2a4a;
+  color: #e0e0e0;
+}
+
+body.night-mode .modal__title {
+  color: #c8a86b;
+}
+
+body.night-mode .modal input,
+body.night-mode .modal select,
+body.night-mode .modal textarea {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+  border-color: #3a3a5a;
+}
+
+body.night-mode .modal label {
+  color: #b0b0b0;
+}
+
+body.night-mode .success-modal {
+  background-color: #2a2a4a;
+  color: #e0e0e0;
+}
+
+body.night-mode .success-title {
+  color: #c8a86b;
+}
+
+body.night-mode .request-code-box {
+  background-color: #1a1a2e;
+}
+
+body.night-mode .request-code {
+  color: #c8a86b;
+}
+
+body.night-mode .hotel-gallery__title {
+  color: #c8a86b;
+}
+
+body.night-mode .services__title {
+  color: #c8a86b;
+}
+
+/* Кнопка ночного режима */
+.night-mode-toggle {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: transform 0.3s;
+}
+
+.night-mode-toggle:hover {
+  transform: scale(1.2);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  body.night-mode .header__nav {
+    background-color: #0d0d1a;
+  }
+}
