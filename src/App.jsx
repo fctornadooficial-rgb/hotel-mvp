@@ -834,15 +834,15 @@ function App() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    
-    // Проверка на блокировку бронирований
-    const isBlocked = localStorage.getItem('booking_blocked') === 'true';
-    if (isBlocked) {
-      alert('Уважаемые гости! 💫\n\nВ настоящий момент мы временно не принимаем новые бронирования. Приносим свои извинения за доставленные неудобства. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.\n\nС уважением,\nКоманда Mövenpick Hotel');
-      return;
-    }
+const handleFormSubmit = (e) => {
+  e.preventDefault();
+  
+  // Проверка на блокировку бронирований
+  const isBlocked = localStorage.getItem('booking_blocked') === 'true';
+  if (isBlocked) {
+    alert('Уважаемые гости! 💫\n\nВ настоящий момент мы временно не принимаем новые бронирования. Приносим свои извинения за доставленные неудобства. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.\n\nС уважением,\nКоманда Mövenpick Hotel');
+    return;
+  }
     
     const code = generateRequestCode();
     setRequestCode(code);
