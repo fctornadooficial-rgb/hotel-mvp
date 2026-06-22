@@ -5,7 +5,7 @@ import AdminPanel from './AdminPanel';
 import { AuthProvider, useAuth } from './AuthContext';
 import RegisterModal from './RegisterModal';
 import GiftCard from './GiftCard';
-
+import ChatBot from './ChatBot';
 // Полные переводы для всех языков
 const translations = {
   en: {
