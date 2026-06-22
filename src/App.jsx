@@ -983,17 +983,14 @@ function App() {
   };
 
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/dadaluba" element={<AdminPanel />} />
-          <Route path="/gift-card" element={<GiftCard />} />
-          <Route path="/" element={<MainPage />} />
-        </Routes>
-        <RegisterModal isOpen={showRegister} onClose={() => setShowRegister(false)} lang={currentLang} />
-      </Router>
-    </AuthProvider>
-  );
-}
+return (
+  <Router>
+    <Routes>
+      <Route path="/dadaluba" element={<AdminPanel />} />
+      <Route path="/gift-card" element={<GiftCard />} />
+      <Route path="/" element={<MainPage />} />
+    </Routes>
+  </Router>
+);
 
 export default App;
