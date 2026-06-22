@@ -1061,7 +1061,7 @@ function App() {
                   className="social-link"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                  📺 YouTube
+                  📺
                 </a>
               </div>
             </div>
