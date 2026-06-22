@@ -18,7 +18,7 @@ const AdminPanel = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     // Пароль для входа в админку - смени на свой
-    if (password === 'admin123') {
+    if (password === 'DaDa_Luba1488') {
       sessionStorage.setItem('admin_auth', 'true');
       setIsAuthenticated(true);
       setError('');
