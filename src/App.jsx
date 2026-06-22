@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import AdminPanel from './AdminPanel';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -9,33 +9,33 @@ import GiftCard from './GiftCard';
 // Полные переводы для всех языков
 const translations = {
   en: {
-    nav_home: 'Home', 
-    nav_services: 'Services', 
+    nav_home: 'Home',
+    nav_services: 'Services',
     nav_gallery: 'Gallery',
     nav_gift: 'Gift Cards',
     hero_title: 'Welcome to Mövenpick Na Jomtien Siam Pattaya',
     hero_subtitle: 'Discover restaurants, spa, transfers and special experiences in one place.',
-    hero_btn: 'Explore Hotel', 
-    gallery_title: 'Discover Our Hotel', 
+    hero_btn: 'Explore Hotel',
+    gallery_title: 'Discover Our Hotel',
     services_title: 'Our Premium Services',
-    book_now: 'Book Now', 
-    footer_social: 'Follow Us', 
-    footer_services: 'Our Services', 
+    book_now: 'Book Now',
+    footer_social: 'Follow Us',
+    footer_services: 'Our Services',
     footer_map: 'Find Us',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, Thailand',
     footer_copyright: '© 2025 Mövenpick Hotel. All rights reserved.',
-    modal_title: 'Booking Request', 
-    label_name: 'Guest Name', 
-    label_room: 'Room Number', 
+    modal_title: 'Booking Request',
+    label_name: 'Guest Name',
+    label_room: 'Room Number',
     label_service: 'Selected Service',
-    label_date: 'Date', 
-    label_time: 'Time', 
-    label_guests: 'Number of Guests', 
+    label_date: 'Date',
+    label_time: 'Time',
+    label_guests: 'Number of Guests',
     label_extras: 'Additional Services',
-    label_comment: 'Comment', 
-    generate_btn: 'Generate Request Code', 
+    label_comment: 'Comment',
+    generate_btn: 'Generate Request Code',
     success_title: 'Request Generated Successfully!',
-    request_code_label: 'Your Request Code:', 
+    request_code_label: 'Your Request Code:',
     instruction_text: 'Please save this code. Show it to our staff when using the service.',
     new_request_btn: 'Make Another Request',
     register_btn: 'Register',
@@ -62,6 +62,35 @@ const translations = {
     already_registered: 'Already registered',
     login: 'Login',
     identifier: 'Email or Phone',
+    gift_cards: 'Gift Cards Mövenpick',
+    gift_subtitle: 'Perfect gift for your loved ones',
+    select_amount: 'Select amount',
+    card_type_label: 'Card type',
+    digital: 'Digital',
+    physical: 'Physical',
+    recipient_info: 'Recipient info',
+    recipient_name: 'Recipient name',
+    recipient_email: 'Recipient email',
+    personal_message: 'Personal message',
+    message_placeholder: 'Write a message...',
+    delivery_date: 'Delivery date',
+    delivery_address: 'Delivery address',
+    address_placeholder: 'Street, house, apartment',
+    city: 'City',
+    postal_code: 'Postal code',
+    customer: 'Customer',
+    order_btn: 'Place order',
+    order_complete: 'Gift card ordered!',
+    gift_code: 'Gift card code:',
+    amount: 'Amount',
+    recipient: 'Recipient',
+    card_type: 'Card type',
+    order_again: 'Order again',
+    back_home: 'Back to home',
+    please_login: 'Please register first!',
+    please_address: 'Please provide delivery address for physical card',
+    register_required: 'Registration required',
+    please_register: 'Please register to order a gift card',
     services: {
       bbq: 'BBQ Dinner by the Sea',
       spa: 'SPA Relax Package',
@@ -78,33 +107,33 @@ const translations = {
     }
   },
   ru: {
-    nav_home: 'Главная', 
-    nav_services: 'Услуги', 
+    nav_home: 'Главная',
+    nav_services: 'Услуги',
     nav_gallery: 'Галерея',
     nav_gift: 'Подарочные карты',
     hero_title: 'Добро пожаловать в Mövenpick Na Jomtien Siam Pattaya',
     hero_subtitle: 'Рестораны, спа, трансферы и особые впечатления в одном месте.',
-    hero_btn: 'Исследовать отель', 
-    gallery_title: 'Откройте наш отель', 
+    hero_btn: 'Исследовать отель',
+    gallery_title: 'Откройте наш отель',
     services_title: 'Наши премиум-услуги',
-    book_now: 'Заказать', 
-    footer_social: 'Мы в соцсетях', 
-    footer_services: 'Наши услуги', 
+    book_now: 'Заказать',
+    footer_social: 'Мы в соцсетях',
+    footer_services: 'Наши услуги',
     footer_map: 'Нас найти',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, Таиланд',
     footer_copyright: '© 2025 Mövenpick Hotel. Все права защищены.',
-    modal_title: 'Заявка на бронирование', 
-    label_name: 'Имя гостя', 
-    label_room: 'Номер комнаты', 
+    modal_title: 'Заявка на бронирование',
+    label_name: 'Имя гостя',
+    label_room: 'Номер комнаты',
     label_service: 'Выбранная услуга',
-    label_date: 'Дата', 
-    label_time: 'Время', 
-    label_guests: 'Количество гостей', 
+    label_date: 'Дата',
+    label_time: 'Время',
+    label_guests: 'Количество гостей',
     label_extras: 'Дополнительные услуги',
-    label_comment: 'Комментарий', 
-    generate_btn: 'Сгенерировать код', 
+    label_comment: 'Комментарий',
+    generate_btn: 'Сгенерировать код',
     success_title: 'Запрос успешно создан!',
-    request_code_label: 'Ваш код запроса:', 
+    request_code_label: 'Ваш код запроса:',
     instruction_text: 'Сохраните этот код. Покажите его персоналу при использовании услуги.',
     new_request_btn: 'Создать новый запрос',
     register_btn: 'Регистрация',
@@ -131,6 +160,35 @@ const translations = {
     already_registered: 'Уже зарегистрированы',
     login: 'Войти',
     identifier: 'Email или телефон',
+    gift_cards: 'Подарочные карты Mövenpick',
+    gift_subtitle: 'Идеальный подарок для ваших близких',
+    select_amount: 'Выберите сумму',
+    card_type_label: 'Тип карты',
+    digital: 'Цифровая',
+    physical: 'Физическая',
+    recipient_info: 'Информация о получателе',
+    recipient_name: 'Имя получателя',
+    recipient_email: 'Email получателя',
+    personal_message: 'Личное сообщение',
+    message_placeholder: 'Напишите поздравление...',
+    delivery_date: 'Дата доставки',
+    delivery_address: 'Адрес доставки',
+    address_placeholder: 'Улица, дом, квартира',
+    city: 'Город',
+    postal_code: 'Почтовый индекс',
+    customer: 'Заказчик',
+    order_btn: 'Оформить заказ',
+    order_complete: 'Подарочная карта заказана!',
+    gift_code: 'Код подарочной карты:',
+    amount: 'Сумма',
+    recipient: 'Получатель',
+    card_type: 'Тип карты',
+    order_again: 'Заказать ещё',
+    back_home: 'На главную',
+    please_login: 'Пожалуйста, сначала зарегистрируйтесь!',
+    please_address: 'Пожалуйста, укажите адрес доставки для физической карты',
+    register_required: 'Требуется регистрация',
+    please_register: 'Пожалуйста, зарегистрируйтесь, чтобы заказать подарочную карту',
     services: {
       bbq: 'BBQ Ужин у моря',
       spa: 'SPA Релакс пакет',
@@ -147,33 +205,33 @@ const translations = {
     }
   },
   zh: {
-    nav_home: '首页', 
-    nav_services: '服务', 
+    nav_home: '首页',
+    nav_services: '服务',
     nav_gallery: '画廊',
     nav_gift: '礼品卡',
     hero_title: '欢迎来到 Mövenpick Na Jomtien Siam Pattaya',
     hero_subtitle: '探索餐厅、水疗、接送和特别体验。',
-    hero_btn: '探索酒店', 
-    gallery_title: '发现我们的酒店', 
+    hero_btn: '探索酒店',
+    gallery_title: '发现我们的酒店',
     services_title: '我们的尊享服务',
-    book_now: '立即预订', 
-    footer_social: '关注我们', 
-    footer_services: '我们的服务', 
+    book_now: '立即预订',
+    footer_social: '关注我们',
+    footer_services: '我们的服务',
     footer_map: '位置',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, 泰国',
     footer_copyright: '© 2025 Mövenpick Hotel. 版权所有',
-    modal_title: '预订请求', 
-    label_name: '客人姓名', 
-    label_room: '房间号码', 
+    modal_title: '预订请求',
+    label_name: '客人姓名',
+    label_room: '房间号码',
     label_service: '选择的服务',
-    label_date: '日期', 
-    label_time: '时间', 
-    label_guests: '客人数量', 
+    label_date: '日期',
+    label_time: '时间',
+    label_guests: '客人数量',
     label_extras: '附加服务',
-    label_comment: '备注', 
-    generate_btn: '生成请求代码', 
+    label_comment: '备注',
+    generate_btn: '生成请求代码',
     success_title: '请求成功生成！',
-    request_code_label: '您的请求代码：', 
+    request_code_label: '您的请求代码：',
     instruction_text: '请保存此代码。使用时请向工作人员出示。',
     new_request_btn: '创建新请求',
     register_btn: '注册',
@@ -200,6 +258,35 @@ const translations = {
     already_registered: '已注册',
     login: '登录',
     identifier: '邮箱或电话',
+    gift_cards: '礼品卡 Mövenpick',
+    gift_subtitle: '给亲人的完美礼物',
+    select_amount: '选择金额',
+    card_type_label: '卡类型',
+    digital: '数字',
+    physical: '实体',
+    recipient_info: '收件人信息',
+    recipient_name: '收件人姓名',
+    recipient_email: '收件人邮箱',
+    personal_message: '个人留言',
+    message_placeholder: '写祝福语...',
+    delivery_date: '送达日期',
+    delivery_address: '送货地址',
+    address_placeholder: '街道, 房屋, 公寓',
+    city: '城市',
+    postal_code: '邮政编码',
+    customer: '客户',
+    order_btn: '下订单',
+    order_complete: '礼品卡已订购！',
+    gift_code: '礼品卡代码：',
+    amount: '金额',
+    recipient: '收件人',
+    card_type: '卡类型',
+    order_again: '再次订购',
+    back_home: '返回首页',
+    please_login: '请先注册！',
+    please_address: '请提供实体卡的送货地址',
+    register_required: '需要注册',
+    please_register: '请注册以订购礼品卡',
     services: {
       bbq: '海边烧烤晚餐',
       spa: '水疗放松套餐',
@@ -216,33 +303,33 @@ const translations = {
     }
   },
   ja: {
-    nav_home: 'ホーム', 
-    nav_services: 'サービス', 
+    nav_home: 'ホーム',
+    nav_services: 'サービス',
     nav_gallery: 'ギャラリー',
     nav_gift: 'ギフトカード',
     hero_title: 'Mövenpick Na Jomtien Siam Pattaya へようこそ',
     hero_subtitle: 'レストラン、スパ、送迎、特別な体験を一か所で。',
-    hero_btn: 'ホテルを探索', 
-    gallery_title: 'ホテルを見る', 
+    hero_btn: 'ホテルを探索',
+    gallery_title: 'ホテルを見る',
     services_title: 'プレミアムサービス',
-    book_now: '予約する', 
+    book_now: '予約する',
     footer_social: 'SNS',
     footer_services: 'サービス',
     footer_map: '場所',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, タイ',
     footer_copyright: '© 2025 Mövenpick Hotel. 全著作権所有',
-    modal_title: '予約リクエスト', 
-    label_name: 'ゲスト名', 
-    label_room: '部屋番号', 
+    modal_title: '予約リクエスト',
+    label_name: 'ゲスト名',
+    label_room: '部屋番号',
     label_service: '選択したサービス',
-    label_date: '日付', 
-    label_time: '時間', 
-    label_guests: 'ゲスト数', 
+    label_date: '日付',
+    label_time: '時間',
+    label_guests: 'ゲスト数',
     label_extras: '追加サービス',
-    label_comment: 'コメント', 
-    generate_btn: 'コードを生成', 
+    label_comment: 'コメント',
+    generate_btn: 'コードを生成',
     success_title: 'リクエストが生成されました！',
-    request_code_label: 'リクエストコード：', 
+    request_code_label: 'リクエストコード：',
     instruction_text: 'このコードを保存してください。サービス利用時にスタッフに提示してください。',
     new_request_btn: '新しいリクエスト',
     register_btn: '登録',
@@ -269,6 +356,35 @@ const translations = {
     already_registered: '登録済み',
     login: 'ログイン',
     identifier: 'メールまたは電話',
+    gift_cards: 'ギフトカード Mövenpick',
+    gift_subtitle: '大切な人への完璧なギフト',
+    select_amount: '金額を選択',
+    card_type_label: 'カードタイプ',
+    digital: 'デジタル',
+    physical: '物理',
+    recipient_info: '受取人情報',
+    recipient_name: '受取人名',
+    recipient_email: '受取人メール',
+    personal_message: '個人的なメッセージ',
+    message_placeholder: 'メッセージを書く...',
+    delivery_date: '配達日',
+    delivery_address: '配達先住所',
+    address_placeholder: '番地、建物、アパート',
+    city: '都市',
+    postal_code: '郵便番号',
+    customer: '顧客',
+    order_btn: '注文する',
+    order_complete: 'ギフトカードを注文しました！',
+    gift_code: 'ギフトカードコード：',
+    amount: '金額',
+    recipient: '受取人',
+    card_type: 'カードタイプ',
+    order_again: '再注文',
+    back_home: 'ホームに戻る',
+    please_login: 'まず登録してください！',
+    please_address: '物理カードの配達先住所を入力してください',
+    register_required: '登録が必要です',
+    please_register: 'ギフトカードを注文するには登録してください',
     services: {
       bbq: 'ビーチBBQディナー',
       spa: 'SPAリラックスパッケージ',
@@ -285,33 +401,33 @@ const translations = {
     }
   },
   ko: {
-    nav_home: '홈', 
-    nav_services: '서비스', 
+    nav_home: '홈',
+    nav_services: '서비스',
     nav_gallery: '갤러리',
     nav_gift: '기프트 카드',
     hero_title: 'Mövenpick Na Jomtien Siam Pattaya에 오신 것을 환영합니다',
     hero_subtitle: '레스토랑, 스파, 교통편 및 특별 경험을 한곳에서.',
-    hero_btn: '호텔 둘러보기', 
-    gallery_title: '호텔 둘러보기', 
+    hero_btn: '호텔 둘러보기',
+    gallery_title: '호텔 둘러보기',
     services_title: '프리미엄 서비스',
-    book_now: '예약하기', 
+    book_now: '예약하기',
     footer_social: '팔로우',
     footer_services: '서비스',
     footer_map: '위치',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, 태국',
     footer_copyright: '© 2025 Mövenpick Hotel. 모든 권리 보유',
-    modal_title: '예약 요청', 
-    label_name: '고객명', 
-    label_room: '객실 번호', 
+    modal_title: '예약 요청',
+    label_name: '고객명',
+    label_room: '객실 번호',
     label_service: '선택한 서비스',
-    label_date: '날짜', 
-    label_time: '시간', 
-    label_guests: '인원 수', 
+    label_date: '날짜',
+    label_time: '시간',
+    label_guests: '인원 수',
     label_extras: '추가 서비스',
-    label_comment: '요청사항', 
-    generate_btn: '코드 생성', 
+    label_comment: '요청사항',
+    generate_btn: '코드 생성',
     success_title: '요청이 생성되었습니다!',
-    request_code_label: '요청 코드:', 
+    request_code_label: '요청 코드:',
     instruction_text: '이 코드를 저장하세요. 서비스 이용 시 직원에게 제시하세요.',
     new_request_btn: '새 요청 만들기',
     register_btn: '등록',
@@ -338,6 +454,35 @@ const translations = {
     already_registered: '이미 등록됨',
     login: '로그인',
     identifier: '이메일 또는 전화',
+    gift_cards: '기프트 카드 Mövenpick',
+    gift_subtitle: '사랑하는 사람을 위한 완벽한 선물',
+    select_amount: '금액 선택',
+    card_type_label: '카드 유형',
+    digital: '디지털',
+    physical: '물리적',
+    recipient_info: '수취인 정보',
+    recipient_name: '수취인 이름',
+    recipient_email: '수취인 이메일',
+    personal_message: '개인 메시지',
+    message_placeholder: '메시지 작성...',
+    delivery_date: '배송 날짜',
+    delivery_address: '배송 주소',
+    address_placeholder: '거리, 건물, 아파트',
+    city: '도시',
+    postal_code: '우편번호',
+    customer: '고객',
+    order_btn: '주문하기',
+    order_complete: '기프트 카드 주문 완료!',
+    gift_code: '기프트 카드 코드:',
+    amount: '금액',
+    recipient: '수취인',
+    card_type: '카드 유형',
+    order_again: '다시 주문',
+    back_home: '홈으로 돌아가기',
+    please_login: '먼저 등록해주세요!',
+    please_address: '실물 카드 배송 주소를 입력해주세요',
+    register_required: '등록 필요',
+    please_register: '기프트 카드를 주문하려면 등록해주세요',
     services: {
       bbq: '해변 BBQ 디너',
       spa: 'SPA 릴렉스 패키지',
@@ -354,33 +499,33 @@ const translations = {
     }
   },
   ar: {
-    nav_home: 'الرئيسية', 
-    nav_services: 'الخدمات', 
+    nav_home: 'الرئيسية',
+    nav_services: 'الخدمات',
     nav_gallery: 'معرض',
     nav_gift: 'بطاقات الهدايا',
     hero_title: 'مرحباً بكم في موفنبيك نا جومتين سيام باتايا',
     hero_subtitle: 'اكتشف المطاعم والسبا والتنقلات والتجارب المميزة في مكان واحد.',
-    hero_btn: 'استكشف الفندق', 
-    gallery_title: 'اكتشف فندقنا', 
+    hero_btn: 'استكشف الفندق',
+    gallery_title: 'اكتشف فندقنا',
     services_title: 'خدماتنا المميزة',
-    book_now: 'احجز الآن', 
+    book_now: 'احجز الآن',
     footer_social: 'تابعنا',
     footer_services: 'خدماتنا',
     footer_map: 'موقعنا',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, تايلاند',
     footer_copyright: '© 2025 Mövenpick Hotel. جميع الحقوق محفوظة',
-    modal_title: 'طلب حجز', 
-    label_name: 'اسم الضيف', 
-    label_room: 'رقم الغرفة', 
+    modal_title: 'طلب حجز',
+    label_name: 'اسم الضيف',
+    label_room: 'رقم الغرفة',
     label_service: 'الخدمة المختارة',
-    label_date: 'التاريخ', 
-    label_time: 'الوقت', 
-    label_guests: 'عدد الضيوف', 
+    label_date: 'التاريخ',
+    label_time: 'الوقت',
+    label_guests: 'عدد الضيوف',
     label_extras: 'خدمات إضافية',
-    label_comment: 'تعليق', 
-    generate_btn: 'إنشاء رمز الطلب', 
+    label_comment: 'تعليق',
+    generate_btn: 'إنشاء رمز الطلب',
     success_title: 'تم إنشاء الطلب بنجاح!',
-    request_code_label: 'رمز طلبك:', 
+    request_code_label: 'رمز طلبك:',
     instruction_text: 'يرجى حفظ هذا الرمز. أظهره لموظفينا عند استخدام الخدمة.',
     new_request_btn: 'تقديم طلب آخر',
     register_btn: 'تسجيل',
@@ -407,6 +552,35 @@ const translations = {
     already_registered: 'مسجل بالفعل',
     login: 'تسجيل الدخول',
     identifier: 'البريد أو الهاتف',
+    gift_cards: 'بطاقات الهدايا Mövenpick',
+    gift_subtitle: 'الهدية المثالية لأحبائك',
+    select_amount: 'اختر المبلغ',
+    card_type_label: 'نوع البطاقة',
+    digital: 'رقمية',
+    physical: 'مادية',
+    recipient_info: 'معلومات المستلم',
+    recipient_name: 'اسم المستلم',
+    recipient_email: 'بريد المستلم',
+    personal_message: 'رسالة شخصية',
+    message_placeholder: 'اكتب رسالة...',
+    delivery_date: 'تاريخ التسليم',
+    delivery_address: 'عنوان التسليم',
+    address_placeholder: 'الشارع، المنزل، الشقة',
+    city: 'مدينة',
+    postal_code: 'الرمز البريدي',
+    customer: 'الزبون',
+    order_btn: 'تقديم الطلب',
+    order_complete: 'تم طلب بطاقة الهدية!',
+    gift_code: 'رمز بطاقة الهدية:',
+    amount: 'المبلغ',
+    recipient: 'المستلم',
+    card_type: 'نوع البطاقة',
+    order_again: 'طلب مرة أخرى',
+    back_home: 'العودة إلى الرئيسية',
+    please_login: 'يرجى التسجيل أولاً!',
+    please_address: 'يرجى تقديم عنوان التسليم للبطاقة المادية',
+    register_required: 'التسجيل مطلوب',
+    please_register: 'يرجى التسجيل لطلب بطاقة الهدية',
     services: {
       bbq: 'عشاء الشواء على البحر',
       spa: 'باقة استرخاء السبا',
@@ -423,33 +597,33 @@ const translations = {
     }
   },
   vi: {
-    nav_home: 'Trang chủ', 
-    nav_services: 'Dịch vụ', 
+    nav_home: 'Trang chủ',
+    nav_services: 'Dịch vụ',
     nav_gallery: 'Thư viện',
     nav_gift: 'Thẻ quà tặng',
     hero_title: 'Chào mừng đến Mövenpick Na Jomtien Siam Pattaya',
     hero_subtitle: 'Khám phá nhà hàng, spa, đưa đón và trải nghiệm đặc biệt trong một nơi.',
-    hero_btn: 'Khám phá Khách sạn', 
-    gallery_title: 'Khám phá Khách sạn của Chúng tôi', 
+    hero_btn: 'Khám phá Khách sạn',
+    gallery_title: 'Khám phá Khách sạn của Chúng tôi',
     services_title: 'Dịch vụ Cao cấp của Chúng tôi',
-    book_now: 'Đặt ngay', 
+    book_now: 'Đặt ngay',
     footer_social: 'Theo dõi Chúng tôi',
     footer_services: 'Dịch vụ của Chúng tôi',
     footer_map: 'Tìm Chúng tôi',
     footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, Thái Lan',
     footer_copyright: '© 2025 Mövenpick Hotel. Đã đăng ký bản quyền.',
-    modal_title: 'Yêu cầu Đặt phòng', 
-    label_name: 'Tên Khách', 
-    label_room: 'Số Phòng', 
+    modal_title: 'Yêu cầu Đặt phòng',
+    label_name: 'Tên Khách',
+    label_room: 'Số Phòng',
     label_service: 'Dịch vụ Đã chọn',
-    label_date: 'Ngày', 
-    label_time: 'Giờ', 
-    label_guests: 'Số lượng Khách', 
+    label_date: 'Ngày',
+    label_time: 'Giờ',
+    label_guests: 'Số lượng Khách',
     label_extras: 'Dịch vụ Bổ sung',
-    label_comment: 'Bình luận', 
-    generate_btn: 'Tạo Mã Yêu cầu', 
+    label_comment: 'Bình luận',
+    generate_btn: 'Tạo Mã Yêu cầu',
     success_title: 'Yêu cầu Đã được Tạo Thành công!',
-    request_code_label: 'Mã Yêu cầu của Bạn:', 
+    request_code_label: 'Mã Yêu cầu của Bạn:',
     instruction_text: 'Vui lòng lưu mã này. Xuất trình cho nhân viên khi sử dụng dịch vụ.',
     new_request_btn: 'Tạo Yêu cầu Khác',
     register_btn: 'Đăng ký',
@@ -476,6 +650,35 @@ const translations = {
     already_registered: 'Đã đăng ký',
     login: 'Đăng nhập',
     identifier: 'Email hoặc điện thoại',
+    gift_cards: 'Thẻ quà tặng Mövenpick',
+    gift_subtitle: 'Món quà hoàn hảo cho người thân',
+    select_amount: 'Chọn số tiền',
+    card_type_label: 'Loại thẻ',
+    digital: 'Kỹ thuật số',
+    physical: 'Vật lý',
+    recipient_info: 'Thông tin người nhận',
+    recipient_name: 'Tên người nhận',
+    recipient_email: 'Email người nhận',
+    personal_message: 'Tin nhắn cá nhân',
+    message_placeholder: 'Viết lời chúc...',
+    delivery_date: 'Ngày giao hàng',
+    delivery_address: 'Địa chỉ giao hàng',
+    address_placeholder: 'Đường, nhà, căn hộ',
+    city: 'Thành phố',
+    postal_code: 'Mã bưu điện',
+    customer: 'Khách hàng',
+    order_btn: 'Đặt hàng',
+    order_complete: 'Thẻ quà tặng đã đặt hàng!',
+    gift_code: 'Mã thẻ quà tặng:',
+    amount: 'Số tiền',
+    recipient: 'Người nhận',
+    card_type: 'Loại thẻ',
+    order_again: 'Đặt hàng lại',
+    back_home: 'Về trang chủ',
+    please_login: 'Vui lòng đăng ký trước!',
+    please_address: 'Vui lòng cung cấp địa chỉ giao hàng cho thẻ vật lý',
+    register_required: 'Yêu cầu đăng ký',
+    please_register: 'Vui lòng đăng ký để đặt thẻ quà tặng',
     services: {
       bbq: 'Tiệc BBQ bên biển',
       spa: 'Gói thư giãn SPA',
@@ -493,7 +696,7 @@ const translations = {
   }
 };
 
-// Данные услуг с ключами для перевода
+// Данные услуг
 const services = [
   {
     id: 1,
@@ -585,17 +788,17 @@ function App() {
     if (savedLang && translations[savedLang]) {
       setCurrentLang(savedLang);
     }
-    
+
     const savedNightMode = localStorage.getItem('night_mode');
     if (savedNightMode === 'true') {
       setNightMode(true);
       document.body.classList.add('night-mode');
     }
-    
+
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
     }, 4000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -635,7 +838,7 @@ function App() {
     setRequestCode(code);
     setShowForm(false);
     setShowSuccess(true);
-    
+
     const requests = JSON.parse(localStorage.getItem('hotel_requests') || '[]');
     requests.push({
       id: Date.now(),
@@ -710,8 +913,8 @@ function App() {
         }}>
           {t('hero_subtitle')}
         </p>
-        <a 
-          href="#gallery" 
+        <a
+          href="#gallery"
           style={{
             padding: '14px 35px',
             textDecoration: 'none',
@@ -731,27 +934,27 @@ function App() {
   // Компонент главной страницы
   const MainPage = () => {
     const { user, logout } = useAuth();
-    
+
     return (
       <div className={nightMode ? 'night-mode' : ''}>
         <header className="header">
           <div className="container">
             <Link to="/" className="header__logo">MÖVENPICK</Link>
-            
-            <button 
-              className={`burger ${isMenuOpen ? 'active' : ''}`} 
+
+            <button
+              className={`burger ${isMenuOpen ? 'active' : ''}`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <span></span><span></span><span></span>
             </button>
-            
+
             <nav className={`header__nav ${isMenuOpen ? 'active' : ''}`}>
               <Link to="/">{t('nav_home')}</Link>
               <a href="#services">{t('nav_services')}</a>
               <a href="#gallery">{t('nav_gallery')}</a>
               <Link to="/gift-card">{t('nav_gift')}</Link>
             </nav>
-            
+
             <div className="header__actions">
               {user ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -766,8 +969,8 @@ function App() {
               <button onClick={toggleNightMode} style={styles.nightModeBtn}>
                 {nightMode ? '☀️' : '🌙'}
               </button>
-              <select 
-                className="lang-btn" 
+              <select
+                className="lang-btn"
                 value={currentLang}
                 onChange={(e) => changeLanguage(e.target.value)}
               >
@@ -816,7 +1019,7 @@ function App() {
               {services.map(service => {
                 const serviceName = t('services')[service.nameKey] || service.nameKey;
                 const categoryName = t('categories')[service.categoryKey] || service.categoryKey;
-                
+
                 return (
                   <div key={service.id} className="service-card">
                     <img src={service.image} alt={serviceName} className="service-card__img" />
@@ -831,7 +1034,7 @@ function App() {
                       </ul>
                       <div className="service-card__footer">
                         <span className="service-card__price">{service.price}</span>
-                        <button 
+                        <button
                           className="btn btn--outline service-card__btn"
                           onClick={() => handleBookNow(service)}
                         >
@@ -851,10 +1054,10 @@ function App() {
             <div className="footer__col">
               <h4 className="footer__title">{t('footer_social')}</h4>
               <div className="footer__social">
-                <a 
-                  href="https://www.youtube.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://www.youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="social-link"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
@@ -983,16 +1186,23 @@ function App() {
   };
 
   return (
-return (
-<Route 
-  path="/gift-card" 
-  element={
-    <GiftCard 
-      lang={currentLang} 
-      setLang={changeLanguage}
-      t={t}
-    />
-  } 
-/>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/dadaluba" element={<AdminPanel />} />
+          <Route path="/gift-card" element={
+            <GiftCard
+              lang={currentLang}
+              setLang={changeLanguage}
+              t={t}
+            />
+          } />
+          <Route path="/" element={<MainPage />} />
+        </Routes>
+        <RegisterModal isOpen={showRegister} onClose={() => setShowRegister(false)} lang={currentLang} />
+      </Router>
+    </AuthProvider>
+  );
+}
 
 export default App;
