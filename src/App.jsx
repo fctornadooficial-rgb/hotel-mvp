@@ -833,11 +833,30 @@ function App() {
   };
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const code = generateRequestCode();
-    setRequestCode(code);
-    setShowForm(false);
-    setShowSuccess(true);
+  e.preventDefault();
+  
+  // Проверка на блокировку бронирований
+  const isBlocked = localStorage.getItem('booking_blocked') === 'true';
+  if (isBlocked) {
+    alert('Уважаемые гости! 💫\n\nВ настоящий момент мы временно не принимаем новые бронирования. Приносим свои извинения за доставленные неудобства. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.\n\nС уважением,\nКоманда Mövenpick Hotel');
+    return;
+  }
+  
+  const code = generateRequestCode();
+  setRequestCode(code);
+  setShowForm(false);
+  setShowSuccess(true);
+
+  const requests = JSON.parse(localStorage.getItem('hotel_requests') || '[]');
+  requests.push({
+    id: Date.now(),
+    ...formData,
+    service: selectedService,
+    requestCode: code,
+    createdAt: new Date().toISOString()
+  });
+  localStorage.setItem('hotel_requests', JSON.stringify(requests));
+};
 
     const requests = JSON.parse(localStorage.getItem('hotel_requests') || '[]');
     requests.push({
