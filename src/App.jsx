@@ -984,13 +984,15 @@ function App() {
 
   return (
 return (
-  <Router>
-    <Routes>
-      <Route path="/dadaluba" element={<AdminPanel />} />
-      <Route path="/gift-card" element={<GiftCard />} />
-      <Route path="/" element={<MainPage />} />
-    </Routes>
-  </Router>
-);
+<Route 
+  path="/gift-card" 
+  element={
+    <GiftCard 
+      lang={currentLang} 
+      setLang={changeLanguage}
+      t={t}
+    />
+  } 
+/>
 
 export default App;
