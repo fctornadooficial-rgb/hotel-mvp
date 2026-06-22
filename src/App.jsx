@@ -1196,17 +1196,17 @@ const handleFormSubmit = (e) => {
   };
 
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/dadaluba" element={<AdminPanel />} />
-          <Route path="/gift-card" element={<GiftCard lang={currentLang} setLang={changeLanguage} t={t} />} />
-          <Route path="/" element={<MainPage />} />
-        </Routes>
-        <RegisterModal isOpen={showRegister} onClose={() => setShowRegister(false)} lang={currentLang} />
-      </Router>
-    </AuthProvider>
-  );
-}
+  <AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/dadaluba" element={<AdminPanel />} />
+        <Route path="/gift-card" element={<GiftCard lang={currentLang} setLang={changeLanguage} t={t} />} />
+        <Route path="/" element={<MainPage />} />
+      </Routes>
+      <RegisterModal isOpen={showRegister} onClose={() => setShowRegister(false)} lang={currentLang} />
+      <ChatBot /> {/* ← Добавьте эту строку */}
+    </Router>
+  </AuthProvider>
+);
 
 export default App;
