@@ -610,21 +610,7 @@ function App() {
     localStorage.setItem('night_mode', !nightMode ? 'true' : 'false');
   };
 
-  const t = (key) => {
-    if (key.includes('.')) {
-      const keys = key.split('.');
-      let value = translations[currentLang];
-      for (const k of keys) {
-        if (value && value[k] !== undefined) {
-          value = value[k];
-        } else {
-          return translations.en[key] || key;
-        }
-      }
-      return value || key;
-    }
-    return translations[currentLang]?.[key] || translations.en[key] || key;
-  };
+  const t = (key) => translations[currentLang]?.[key] || translations.en[key];
 
   const generateRequestCode = () => {
     const prefix = selectedService?.nameKey?.substring(0, 3).toUpperCase() || 'REQ';
@@ -828,8 +814,8 @@ function App() {
             <h2 className="services__title">{t('services_title')}</h2>
             <div className="services__grid">
               {services.map(service => {
-                const serviceName = t(`services.${service.nameKey}`);
-                const categoryName = t(`categories.${service.categoryKey}`);
+                const serviceName = t('services')[service.nameKey] || service.nameKey;
+                const categoryName = t('categories')[service.categoryKey] || service.categoryKey;
                 
                 return (
                   <div key={service.id} className="service-card">
@@ -880,7 +866,7 @@ function App() {
               <h4 className="footer__title">{t('footer_services')}</h4>
               <ul className="footer__links">
                 {services.map(service => {
-                  const serviceName = t(`services.${service.nameKey}`);
+                  const serviceName = t('services')[service.nameKey] || service.nameKey;
                   return (
                     <li key={service.id}><a href="#">{serviceName}</a></li>
                   );
@@ -913,7 +899,7 @@ function App() {
                 </div>
                 <div className="form-group">
                   <label>{t('label_service')}</label>
-                  <input type="text" value={selectedService ? t(`services.${selectedService.nameKey}`) : ''} disabled style={{ background: '#f0f0f0' }} />
+                  <input type="text" value={selectedService ? t('services')[selectedService.nameKey] : ''} disabled style={{ background: '#f0f0f0' }} />
                 </div>
                 <div className="form-group">
                   <label>{t('label_date')} *</label>
@@ -956,7 +942,7 @@ function App() {
                 <div className="request-code">{requestCode}</div>
               </div>
               <div className="success-details">
-                <p><strong>{t('label_service')}:</strong> {selectedService ? t(`services.${selectedService.nameKey}`) : ''}</p>
+                <p><strong>{t('label_service')}:</strong> {selectedService ? t('services')[selectedService.nameKey] : ''}</p>
                 <p><strong>{t('label_guests')}:</strong> {formData.guests}</p>
                 <p className="instruction-text">{t('instruction_text')}</p>
               </div>
