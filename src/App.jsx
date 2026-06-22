@@ -813,7 +813,9 @@ function App() {
     localStorage.setItem('night_mode', !nightMode ? 'true' : 'false');
   };
 
-  const t = (key) => translations[currentLang]?.[key] || translations.en[key];
+  const t = (key) => {
+    return translations[currentLang]?.[key] || translations.en[key];
+  };
 
   const generateRequestCode = () => {
     const prefix = selectedService?.nameKey?.substring(0, 3).toUpperCase() || 'REQ';
@@ -833,30 +835,19 @@ function App() {
   };
 
   const handleFormSubmit = (e) => {
-  e.preventDefault();
-  
-  // Проверка на блокировку бронирований
-  const isBlocked = localStorage.getItem('booking_blocked') === 'true';
-  if (isBlocked) {
-    alert('Уважаемые гости! 💫\n\nВ настоящий момент мы временно не принимаем новые бронирования. Приносим свои извинения за доставленные неудобства. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.\n\nС уважением,\nКоманда Mövenpick Hotel');
-    return;
-  }
-  
-  const code = generateRequestCode();
-  setRequestCode(code);
-  setShowForm(false);
-  setShowSuccess(true);
-
-  const requests = JSON.parse(localStorage.getItem('hotel_requests') || '[]');
-  requests.push({
-    id: Date.now(),
-    ...formData,
-    service: selectedService,
-    requestCode: code,
-    createdAt: new Date().toISOString()
-  });
-  localStorage.setItem('hotel_requests', JSON.stringify(requests));
-};
+    e.preventDefault();
+    
+    // Проверка на блокировку бронирований
+    const isBlocked = localStorage.getItem('booking_blocked') === 'true';
+    if (isBlocked) {
+      alert('Уважаемые гости! 💫\n\nВ настоящий момент мы временно не принимаем новые бронирования. Приносим свои извинения за доставленные неудобства. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.\n\nС уважением,\nКоманда Mövenpick Hotel');
+      return;
+    }
+    
+    const code = generateRequestCode();
+    setRequestCode(code);
+    setShowForm(false);
+    setShowSuccess(true);
 
     const requests = JSON.parse(localStorage.getItem('hotel_requests') || '[]');
     requests.push({
@@ -1080,7 +1071,7 @@ function App() {
                   className="social-link"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                  📺
+                  📺 YouTube
                 </a>
               </div>
             </div>
@@ -1209,13 +1200,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/dadaluba" element={<AdminPanel />} />
-          <Route path="/gift-card" element={
-            <GiftCard
-              lang={currentLang}
-              setLang={changeLanguage}
-              t={t}
-            />
-          } />
+          <Route path="/gift-card" element={<GiftCard lang={currentLang} setLang={changeLanguage} t={t} />} />
           <Route path="/" element={<MainPage />} />
         </Routes>
         <RegisterModal isOpen={showRegister} onClose={() => setShowRegister(false)} lang={currentLang} />
