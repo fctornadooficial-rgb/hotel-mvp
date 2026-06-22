@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
-const GiftCard = () => {
+const GiftCard = ({ lang, setLang, t }) => {
   const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [giftData, setGiftData] = useState({
@@ -18,6 +19,17 @@ const GiftCard = () => {
   });
   const [orderComplete, setOrderComplete] = useState(false);
   const [giftCode, setGiftCode] = useState('');
+
+  // Список языков для переключения
+  const languageList = [
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    { code: 'ko', name: '한국어', flag: '🇰🇷' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+    { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' }
+  ];
 
   const amounts = [
     { value: '500', label: '500 THB', icon: '🎁' },
@@ -42,14 +54,13 @@ const GiftCard = () => {
     e.preventDefault();
     
     if (!user) {
-      alert('Пожалуйста, сначала зарегистрируйтесь!');
+      alert(t('please_login') || 'Пожалуйста, сначала зарегистрируйтесь!');
       return;
     }
 
-    // Проверка адреса для физической карты
     if (giftData.cardType === 'physical') {
       if (!giftData.deliveryAddress || !giftData.deliveryCity) {
-        alert('Пожалуйста, укажите адрес доставки для физической карты');
+        alert(t('please_address') || 'Пожалуйста, укажите адрес доставки для физической карты');
         return;
       }
     }
@@ -95,9 +106,9 @@ const GiftCard = () => {
       <div style={styles.container}>
         <div style={styles.card}>
           <div style={styles.icon}>🔐</div>
-          <h2 style={styles.title}>Требуется регистрация</h2>
-          <p style={styles.text}>Пожалуйста, зарегистрируйтесь, чтобы заказать подарочную карту</p>
-          <a href="/" style={styles.registerBtn}>Зарегистрироваться</a>
+          <h2 style={styles.title}>{t('register_required') || 'Требуется регистрация'}</h2>
+          <p style={styles.text}>{t('please_register') || 'Пожалуйста, зарегистрируйтесь, чтобы заказать подарочную карту'}</p>
+          <Link to="/" style={styles.registerBtn}>{t('register_btn') || 'Зарегистрироваться'}</Link>
         </div>
       </div>
     );
@@ -108,25 +119,28 @@ const GiftCard = () => {
       <div style={styles.container}>
         <div style={styles.successCard}>
           <div style={styles.successIcon}>🎉</div>
-          <h2 style={styles.successTitle}>Подарочная карта заказана!</h2>
+          <h2 style={styles.successTitle}>{t('order_complete') || 'Подарочная карта заказана!'}</h2>
           <div style={styles.codeBox}>
-            <p style={styles.codeLabel}>Код подарочной карты:</p>
+            <p style={styles.codeLabel}>{t('gift_code') || 'Код подарочной карты:'}</p>
             <div style={styles.code}>{giftCode}</div>
           </div>
           <div style={styles.orderDetails}>
-            <p><strong>Сумма:</strong> {giftData.amount} THB</p>
-            <p><strong>Получатель:</strong> {giftData.recipientName}</p>
-            <p><strong>Тип карты:</strong> {giftData.cardType === 'digital' ? 'Цифровая' : 'Физическая'}</p>
+            <p><strong>{t('amount') || 'Сумма'}:</strong> {giftData.amount} THB</p>
+            <p><strong>{t('recipient') || 'Получатель'}:</strong> {giftData.recipientName}</p>
+            <p><strong>{t('card_type') || 'Тип карты'}:</strong> {giftData.cardType === 'digital' ? (t('digital') || 'Цифровая') : (t('physical') || 'Физическая')}</p>
             {giftData.cardType === 'physical' && (
               <>
-                <p><strong>Адрес доставки:</strong></p>
+                <p><strong>{t('delivery_address') || 'Адрес доставки'}:</strong></p>
                 <p>{giftData.deliveryAddress}</p>
                 <p>{giftData.deliveryCity}, {giftData.deliveryPostalCode}</p>
                 <p>{giftData.deliveryCountry}</p>
               </>
             )}
           </div>
-          <button onClick={resetForm} style={styles.newOrderBtn}>Заказать ещё</button>
+          <div style={styles.buttonsRow}>
+            <button onClick={resetForm} style={styles.newOrderBtn}>{t('order_again') || 'Заказать ещё'}</button>
+            <Link to="/" style={styles.homeBtn}>🏠 {t('back_home') || 'На главную'}</Link>
+          </div>
         </div>
       </div>
     );
@@ -135,16 +149,35 @@ const GiftCard = () => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
+        {/* Шапка с переключателем языка и кнопкой "На главную" */}
+        <div style={styles.headerTop}>
+          <Link to="/" style={styles.homeLink}>🏠 {t('back_home') || 'На главную'}</Link>
+          <div style={styles.langSelector}>
+            {languageList.map(l => (
+              <button
+                key={l.code}
+                onClick={() => setLang(l.code)}
+                style={{
+                  ...styles.langBtn,
+                  ...(lang === l.code ? styles.langBtnActive : {})
+                }}
+                title={l.name}
+              >
+                {l.flag}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div style={styles.header}>
           <div style={styles.headerIcon}>🎁</div>
-          <h1 style={styles.mainTitle}>Подарочные карты Mövenpick</h1>
-          <p style={styles.subtitle}>Идеальный подарок для ваших близких</p>
+          <h1 style={styles.mainTitle}>{t('gift_cards') || 'Подарочные карты Mövenpick'}</h1>
+          <p style={styles.subtitle}>{t('gift_subtitle') || 'Идеальный подарок для ваших близких'}</p>
         </div>
 
         <form onSubmit={handleSubmit} style={styles.form}>
-          {/* Выбор суммы */}
           <div style={styles.section}>
-            <label style={styles.sectionLabel}>Выберите сумму</label>
+            <label style={styles.sectionLabel}>{t('select_amount') || 'Выберите сумму'}</label>
             <div style={styles.amountGrid}>
               {amounts.map(amount => (
                 <button
@@ -163,9 +196,8 @@ const GiftCard = () => {
             </div>
           </div>
 
-          {/* Тип карты */}
           <div style={styles.section}>
-            <label style={styles.sectionLabel}>Тип карты</label>
+            <label style={styles.sectionLabel}>{t('card_type_label') || 'Тип карты'}</label>
             <div style={styles.typeGrid}>
               <button
                 type="button"
@@ -176,7 +208,7 @@ const GiftCard = () => {
                 }}
               >
                 <span>📧</span>
-                <span>Цифровая</span>
+                <span>{t('digital') || 'Цифровая'}</span>
               </button>
               <button
                 type="button"
@@ -187,18 +219,17 @@ const GiftCard = () => {
                 }}
               >
                 <span>💳</span>
-                <span>Физическая</span>
+                <span>{t('physical') || 'Физическая'}</span>
               </button>
             </div>
           </div>
 
-          {/* Информация о получателе */}
           <div style={styles.section}>
-            <label style={styles.sectionLabel}>Информация о получателе</label>
+            <label style={styles.sectionLabel}>{t('recipient_info') || 'Информация о получателе'}</label>
             <input
               type="text"
               name="recipientName"
-              placeholder="Имя получателя"
+              placeholder={t('recipient_name') || 'Имя получателя'}
               value={giftData.recipientName}
               onChange={handleChange}
               required
@@ -207,7 +238,7 @@ const GiftCard = () => {
             <input
               type="email"
               name="recipientEmail"
-              placeholder="Email получателя"
+              placeholder={t('recipient_email') || 'Email получателя'}
               value={giftData.recipientEmail}
               onChange={handleChange}
               required
@@ -215,12 +246,11 @@ const GiftCard = () => {
             />
           </div>
 
-          {/* Личное сообщение */}
           <div style={styles.section}>
-            <label style={styles.sectionLabel}>Личное сообщение</label>
+            <label style={styles.sectionLabel}>{t('personal_message') || 'Личное сообщение'}</label>
             <textarea
               name="message"
-              placeholder="Напишите поздравление..."
+              placeholder={t('message_placeholder') || 'Напишите поздравление...'}
               value={giftData.message}
               onChange={handleChange}
               rows="3"
@@ -228,9 +258,8 @@ const GiftCard = () => {
             />
           </div>
 
-          {/* Дата доставки */}
           <div style={styles.section}>
-            <label style={styles.sectionLabel}>Дата доставки</label>
+            <label style={styles.sectionLabel}>{t('delivery_date') || 'Дата доставки'}</label>
             <input
               type="date"
               name="deliveryDate"
@@ -240,14 +269,13 @@ const GiftCard = () => {
             />
           </div>
 
-          {/* Адрес доставки (только для физической карты) */}
           {giftData.cardType === 'physical' && (
             <div style={styles.section}>
-              <label style={styles.sectionLabel}>📍 Адрес доставки</label>
+              <label style={styles.sectionLabel}>📍 {t('delivery_address') || 'Адрес доставки'}</label>
               <input
                 type="text"
                 name="deliveryAddress"
-                placeholder="Улица, дом, квартира"
+                placeholder={t('address_placeholder') || 'Улица, дом, квартира'}
                 value={giftData.deliveryAddress}
                 onChange={handleChange}
                 required
@@ -257,7 +285,7 @@ const GiftCard = () => {
                 <input
                   type="text"
                   name="deliveryCity"
-                  placeholder="Город"
+                  placeholder={t('city') || 'Город'}
                   value={giftData.deliveryCity}
                   onChange={handleChange}
                   required
@@ -266,7 +294,7 @@ const GiftCard = () => {
                 <input
                   type="text"
                   name="deliveryPostalCode"
-                  placeholder="Почтовый индекс"
+                  placeholder={t('postal_code') || 'Почтовый индекс'}
                   value={giftData.deliveryPostalCode}
                   onChange={handleChange}
                   style={{...styles.input, width: '120px'}}
@@ -288,18 +316,21 @@ const GiftCard = () => {
             </div>
           )}
 
-          {/* Информация о покупателе */}
           <div style={styles.userInfo}>
-            <p style={styles.userInfoText}>👤 Заказчик: {user.name}</p>
+            <p style={styles.userInfoText}>👤 {t('customer') || 'Заказчик'}: {user.name}</p>
             <p style={styles.userInfoText}>
               {user.phone ? `📞 ${user.phone}` : user.email ? `📧 ${user.email}` : ''}
             </p>
           </div>
 
           <button type="submit" style={styles.submitBtn}>
-            Оформить заказ
+            {t('order_btn') || 'Оформить заказ'}
           </button>
         </form>
+
+        <div style={styles.footerLinks}>
+          <Link to="/" style={styles.footerLink}>🏠 {t('back_home') || 'На главную'}</Link>
+        </div>
       </div>
     </div>
   );
@@ -320,7 +351,45 @@ const styles = {
     background: 'white',
     borderRadius: '20px',
     padding: '40px',
-    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+    position: 'relative'
+  },
+  headerTop: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+    flexWrap: 'wrap',
+    gap: '10px'
+  },
+  homeLink: {
+    color: '#c8a86b',
+    textDecoration: 'none',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    padding: '8px 16px',
+    background: '#f5f0e8',
+    borderRadius: '20px',
+    transition: 'background 0.3s'
+  },
+  langSelector: {
+    display: 'flex',
+    gap: '5px',
+    flexWrap: 'wrap'
+  },
+  langBtn: {
+    background: 'none',
+    border: '1px solid #e0e0e0',
+    borderRadius: '8px',
+    padding: '5px 8px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    transition: 'all 0.3s'
+  },
+  langBtnActive: {
+    borderColor: '#c8a86b',
+    background: '#fef5e8',
+    transform: 'scale(1.1)'
   },
   successCard: {
     maxWidth: '500px',
@@ -488,6 +557,12 @@ const styles = {
     borderRadius: '10px',
     marginBottom: '20px'
   },
+  buttonsRow: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
+  },
   newOrderBtn: {
     padding: '12px 25px',
     background: '#c8a86b',
@@ -496,6 +571,15 @@ const styles = {
     borderRadius: '10px',
     cursor: 'pointer',
     fontSize: '14px'
+  },
+  homeBtn: {
+    padding: '12px 25px',
+    background: '#1a1a2e',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '10px',
+    fontSize: '14px',
+    display: 'inline-block'
   },
   registerBtn: {
     display: 'inline-block',
@@ -518,6 +602,17 @@ const styles = {
   text: {
     fontSize: '14px',
     color: '#666'
+  },
+  footerLinks: {
+    textAlign: 'center',
+    marginTop: '20px',
+    paddingTop: '20px',
+    borderTop: '1px solid #eee'
+  },
+  footerLink: {
+    color: '#c8a86b',
+    textDecoration: 'none',
+    fontSize: '14px'
   }
 };
 
