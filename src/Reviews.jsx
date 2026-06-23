@@ -121,7 +121,6 @@ const Reviews = ({ lang, t }) => {
     setNewReview(prev => ({ ...prev, [name]: value }));
   };
 
-  // Фильтрация и сортировка
   const filteredReviews = reviews
     .filter(review => {
       if (filter === 'all') return true;
@@ -153,7 +152,8 @@ const Reviews = ({ lang, t }) => {
       ja: ['ひどい', '悪い', '普通', '良い', '素晴らしい'],
       ko: ['최악', '나쁨', '보통', '좋음', '최고'],
       ar: ['فظيع', 'سيئ', 'متوسط', 'جيد', 'ممتاز'],
-      vi: ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
+      vi: ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời'],
+      az: ['Dəhşətli', 'Pis', 'Orta', 'Yaxşı', 'Əla']
     };
     return (texts[lang] || texts.en)[rating - 1] || '';
   };
