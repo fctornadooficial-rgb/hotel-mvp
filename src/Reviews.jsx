@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { getReviews, addReview, likeReview, reportReview, deleteReview } from './dataService';
 
 const Reviews = ({ lang, t }) => {
   const { user } = useAuth();
@@ -16,7 +17,6 @@ const Reviews = ({ lang, t }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  // Список услуг для фильтра
   const servicesList = [
     { id: 'all', name: t('all_services') || 'Все услуги' },
     { id: 'bbq', name: 'BBQ Dinner' },
@@ -27,17 +27,15 @@ const Reviews = ({ lang, t }) => {
     { id: 'hotel', name: t('hotel_services') || 'Отель в целом' }
   ];
 
-  // Загрузка отзывов из localStorage
   useEffect(() => {
     loadReviews();
   }, []);
 
   const loadReviews = () => {
-    const savedReviews = JSON.parse(localStorage.getItem('hotel_reviews') || '[]');
+    const savedReviews = getReviews();
     setReviews(savedReviews);
   };
 
-  // Добавление отзыва
   const handleSubmitReview = (e) => {
     e.preventDefault();
     setError('');
@@ -54,60 +52,42 @@ const Reviews = ({ lang, t }) => {
 
     setIsSubmitting(true);
 
-    const review = {
-      id: Date.now(),
+    const reviewData = {
       userId: user.id,
       userName: newReview.name || user.name,
       rating: newReview.rating,
       comment: newReview.comment.trim(),
       service: newReview.service,
-      date: new Date().toISOString(),
-      likes: 0,
-      likedBy: [],
-      reports: 0,
       status: 'active'
     };
 
-    const updatedReviews = [review, ...reviews];
-    setReviews(updatedReviews);
-    localStorage.setItem('hotel_reviews', JSON.stringify(updatedReviews));
-
-    setNewReview({
-      name: '',
-      rating: 5,
-      comment: '',
-      service: 'all'
-    });
+    const newReviewObj = addReview(reviewData);
+    if (newReviewObj) {
+      setReviews(prev => [newReviewObj, ...prev]);
+      setNewReview({
+        name: '',
+        rating: 5,
+        comment: '',
+        service: 'all'
+      });
+      alert(t('review_added') || 'Ваш отзыв успешно добавлен!');
+    } else {
+      setError('Ошибка при сохранении отзыва');
+    }
     setIsSubmitting(false);
-    alert(t('review_added') || 'Ваш отзыв успешно добавлен!');
   };
 
-  // Лайк отзыва
   const handleLike = (reviewId) => {
     if (!user) {
       alert(t('please_login_to_like') || 'Войдите, чтобы ставить лайки');
       return;
     }
-
-    const updatedReviews = reviews.map(review => {
-      if (review.id === reviewId) {
-        const hasLiked = review.likedBy?.includes(user.id);
-        return {
-          ...review,
-          likes: hasLiked ? review.likes - 1 : review.likes + 1,
-          likedBy: hasLiked 
-            ? review.likedBy.filter(id => id !== user.id)
-            : [...(review.likedBy || []), user.id]
-        };
-      }
-      return review;
-    });
-
-    setReviews(updatedReviews);
-    localStorage.setItem('hotel_reviews', JSON.stringify(updatedReviews));
+    const updatedReview = likeReview(reviewId, user.id);
+    if (updatedReview) {
+      setReviews(prev => prev.map(r => r.id === reviewId ? updatedReview : r));
+    }
   };
 
-  // Удаление отзыва (только для админа или автора)
   const handleDeleteReview = (reviewId) => {
     if (!user) return;
     
@@ -118,32 +98,27 @@ const Reviews = ({ lang, t }) => {
     }
 
     if (window.confirm(t('delete_review_confirm') || 'Вы уверены, что хотите удалить отзыв?')) {
-      const updatedReviews = reviews.filter(r => r.id !== reviewId);
-      setReviews(updatedReviews);
-      localStorage.setItem('hotel_reviews', JSON.stringify(updatedReviews));
+      if (deleteReview(reviewId)) {
+        setReviews(prev => prev.filter(r => r.id !== reviewId));
+      }
     }
   };
 
-  // Жалоба на отзыв
   const handleReport = (reviewId) => {
     if (!user) {
       alert(t('please_login_to_report') || 'Войдите, чтобы пожаловаться');
       return;
     }
+    const updatedReview = reportReview(reviewId);
+    if (updatedReview) {
+      setReviews(prev => prev.map(r => r.id === reviewId ? updatedReview : r));
+      alert(t('report_sent') || 'Жалоба отправлена модераторам');
+    }
+  };
 
-    const updatedReviews = reviews.map(review => {
-      if (review.id === reviewId) {
-        return {
-          ...review,
-          reports: (review.reports || 0) + 1
-        };
-      }
-      return review;
-    });
-
-    setReviews(updatedReviews);
-    localStorage.setItem('hotel_reviews', JSON.stringify(updatedReviews));
-    alert(t('report_sent') || 'Жалоба отправлена модераторам');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewReview(prev => ({ ...prev, [name]: value }));
   };
 
   // Фильтрация и сортировка
@@ -161,7 +136,6 @@ const Reviews = ({ lang, t }) => {
       return 0;
     });
 
-  // Форматирование даты
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', {
@@ -171,7 +145,6 @@ const Reviews = ({ lang, t }) => {
     });
   };
 
-  // Перевод для рейтинга
   const getRatingText = (rating) => {
     const texts = {
       ru: ['Ужасно', 'Плохо', 'Нормально', 'Хорошо', 'Отлично'],
@@ -185,7 +158,6 @@ const Reviews = ({ lang, t }) => {
     return (texts[lang] || texts.en)[rating - 1] || '';
   };
 
-  // Звёзды для рейтинга
   const renderStars = (rating, interactive = false, onChange = null) => {
     return (
       <div style={{ display: 'flex', gap: '4px' }}>
@@ -200,8 +172,6 @@ const Reviews = ({ lang, t }) => {
               transition: 'transform 0.2s',
               userSelect: 'none'
             }}
-            onMouseEnter={interactive ? (e) => e.target.style.transform = 'scale(1.2)' : undefined}
-            onMouseLeave={interactive ? (e) => e.target.style.transform = 'scale(1)' : undefined}
           >
             ★
           </span>
@@ -210,7 +180,6 @@ const Reviews = ({ lang, t }) => {
     );
   };
 
-  // Иконка услуги
   const getServiceIcon = (service) => {
     const icons = {
       bbq: '🍖',
@@ -225,13 +194,11 @@ const Reviews = ({ lang, t }) => {
 
   return (
     <div style={styles.container}>
-      {/* Заголовок */}
       <div style={styles.header}>
         <h1 style={styles.title}>💬 {t('guest_reviews') || 'Отзывы гостей'}</h1>
         <p style={styles.subtitle}>{t('share_experience') || 'Поделитесь своим опытом и помогите другим выбрать идеальный отдых'}</p>
       </div>
 
-      {/* Форма добавления отзыва */}
       {user ? (
         <div style={styles.formCard}>
           <h3 style={styles.formTitle}>{t('leave_review') || 'Оставить отзыв'}</h3>
@@ -241,8 +208,9 @@ const Reviews = ({ lang, t }) => {
                 <label style={styles.formLabel}>{t('your_name') || 'Ваше имя'}</label>
                 <input
                   type="text"
+                  name="name"
                   value={newReview.name}
-                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                  onChange={handleChange}
                   placeholder={user.name || t('your_name') || 'Ваше имя'}
                   style={styles.formInput}
                 />
@@ -250,8 +218,9 @@ const Reviews = ({ lang, t }) => {
               <div style={styles.formGroup}>
                 <label style={styles.formLabel}>{t('service') || 'Услуга'}</label>
                 <select
+                  name="service"
                   value={newReview.service}
-                  onChange={(e) => setNewReview({ ...newReview, service: e.target.value })}
+                  onChange={handleChange}
                   style={styles.formSelect}
                 >
                   {servicesList.map(s => (
@@ -270,8 +239,9 @@ const Reviews = ({ lang, t }) => {
             <div style={styles.formGroup}>
               <label style={styles.formLabel}>{t('your_review') || 'Ваш отзыв'}</label>
               <textarea
+                name="comment"
                 value={newReview.comment}
-                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                onChange={handleChange}
                 placeholder={t('review_placeholder') || 'Расскажите о своём опыте...'}
                 rows="4"
                 style={styles.formTextarea}
@@ -292,7 +262,6 @@ const Reviews = ({ lang, t }) => {
         </div>
       )}
 
-      {/* Фильтры и сортировка */}
       <div style={styles.controls}>
         <div style={styles.filterGroup}>
           <span style={styles.filterLabel}>{t('filter') || 'Фильтр'}:</span>
@@ -315,7 +284,6 @@ const Reviews = ({ lang, t }) => {
         </div>
       </div>
 
-      {/* Список отзывов */}
       <div style={styles.reviewsList}>
         {filteredReviews.length === 0 ? (
           <div style={styles.emptyState}>
