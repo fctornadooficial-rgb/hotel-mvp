@@ -101,6 +101,30 @@ const RegisterModal = ({ isOpen, onClose, lang }) => {
         login: 'تسجيل الدخول', identifier: 'البريد أو الهاتف',
         code_sent: 'تم إرسال الرمز إلى بريدك الإلكتروني!', sending: 'جاري الإرسال...'
       }
+      az: {  // ← ДОБАВЬТЕ ЭТОТ БЛОК
+    welcome: 'Xoş gəlmisiniz',
+    sign_in: 'Daxil ol',
+    or_register: 'və ya qeydiyyatdan keç',
+    by_phone: 'Telefonla',
+    by_email: 'Email ilə',
+    phone_register: 'Telefonla qeydiyyat',
+    email_register: 'Email ilə qeydiyyat',
+    your_name: 'Adınız',
+    phone_number: 'Telefon nömrəsi',
+    email: 'Email',
+    password: 'Şifrə',
+    get_code: 'Kodu al',
+    verify_code: 'Kodu təsdiqlə',
+    enter_code: '6 rəqəmli kodu daxil edin',
+    confirm: 'Təsdiqlə',
+    back: 'Geri',
+    invalid_code: 'Yanlış təsdiqləmə kodu',
+    already_registered: 'Artıq qeydiyyatdan keçilib',
+    login: 'Daxil ol',
+    identifier: 'Email və ya Telefon',
+    code_sent: 'Kod emailinizə göndərildi!',
+    sending: 'Göndərilir...'
+      }
     };
     return translations[lang]?.[key] || translations.en[key];
   };
