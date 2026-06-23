@@ -1082,3 +1082,83 @@ body.night-mode .services__title {
     background-color: #0d0d1a;
   }
 }
+
+/* Ночной режим для страницы отзывов */
+body.night-mode .reviews-container {
+  background: #1a1a2e;
+}
+
+body.night-mode .review-card {
+  background: #2a2a4a;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body.night-mode .review-card .reviewer-name {
+  color: #c8a86b;
+}
+
+body.night-mode .review-card .review-comment {
+  color: #e0e0e0;
+}
+
+body.night-mode .review-card .review-service {
+  color: #aaa;
+}
+
+body.night-mode .review-card .review-date {
+  color: #777;
+}
+
+body.night-mode .review-card .review-footer {
+  border-top-color: #3a3a5a;
+}
+
+body.night-mode .form-card {
+  background: #2a2a4a;
+}
+
+body.night-mode .form-card label {
+  color: #e0e0e0;
+}
+
+body.night-mode .form-card input,
+body.night-mode .form-card select,
+body.night-mode .form-card textarea {
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border-color: #3a3a5a;
+}
+
+body.night-mode .controls {
+  background: #2a2a4a;
+}
+
+body.night-mode .controls .filter-label {
+  color: #aaa;
+}
+
+body.night-mode .controls select {
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border-color: #3a3a5a;
+}
+
+body.night-mode .empty-state {
+  background: #2a2a4a;
+}
+
+body.night-mode .empty-state .empty-title {
+  color: #c8a86b;
+}
+
+body.night-mode .empty-state .empty-text {
+  color: #aaa;
+}
+
+body.night-mode .login-prompt {
+  background: #2a2a4a;
+}
+
+body.night-mode .login-prompt p {
+  color: #e0e0e0;
+}
