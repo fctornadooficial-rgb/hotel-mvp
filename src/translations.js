@@ -968,9 +968,147 @@ export const translations = {
       special: 'Đặc biệt'
     }
   }
+az: {
+    nav_home: 'Ana səhifə',
+    nav_services: 'Xidmətlər',
+    nav_gallery: 'Qalereya',
+    nav_gift: 'Hədiyyə kartları',
+    nav_reviews: 'Rəylər',
+    hero_title: 'Mövenpick Na Jomtien Siam Pattaya\'ya xoş gəlmisiniz',
+    hero_subtitle: 'Restoranlar, spa, transfer və xüsusi təcrübələri bir yerdə kəşf edin.',
+    hero_btn: 'Oteli araşdır',
+    gallery_title: 'Otelimizi kəşf edin',
+    services_title: 'Premium xidmətlərimiz',
+    book_now: 'İndi rezerv et',
+    footer_social: 'Bizi izləyin',
+    footer_services: 'Xidmətlərimiz',
+    footer_map: 'Bizi tapın',
+    footer_address: '55 Moo 2, Na Jomtien, Sattahip, Chonburi 20250, Tayland',
+    footer_copyright: '© 2025 Mövenpick Hotel. Bütün hüquqlar qorunur.',
+    modal_title: 'Rezervasiya sorğusu',
+    label_name: 'Qonağın adı',
+    label_room: 'Otaq nömrəsi',
+    label_service: 'Seçilmiş xidmət',
+    label_date: 'Tarix',
+    label_time: 'Vaxt',
+    label_guests: 'Qonaqların sayı',
+    label_extras: 'Əlavə xidmətlər',
+    label_comment: 'Şərh',
+    generate_btn: 'Sorğu kodu yarat',
+    success_title: 'Sorğu uğurla yaradıldı!',
+    request_code_label: 'Sorğu kodunuz:',
+    instruction_text: 'Bu kodu saxlayın. Xidmətdən istifadə edərkən işçilərimizə göstərin.',
+    new_request_btn: 'Yeni sorğu yarat',
+    register_btn: 'Qeydiyyat',
+    logout_btn: 'Çıxış',
+    night_mode: 'Gecə rejimi',
+    day_mode: 'Gündüz rejimi',
+    welcome: 'Xoş gəlmisiniz',
+    sign_in: 'Daxil ol',
+    or_register: 'və ya qeydiyyatdan keç',
+    by_phone: 'Telefonla',
+    by_email: 'Email ilə',
+    phone_register: 'Telefonla qeydiyyat',
+    email_register: 'Email ilə qeydiyyat',
+    your_name: 'Adınız',
+    phone_number: 'Telefon nömrəsi',
+    email: 'Email',
+    password: 'Şifrə',
+    get_code: 'Kodu al',
+    verify_code: 'Kodu təsdiqlə',
+    enter_code: '6 rəqəmli kodu daxil edin',
+    confirm: 'Təsdiqlə',
+    back: 'Geri',
+    invalid_code: 'Yanlış təsdiqləmə kodu',
+    already_registered: 'Artıq qeydiyyatdan keçilib',
+    login: 'Daxil ol',
+    identifier: 'Email və ya Telefon',
+    gift_cards: 'Hədiyyə kartları Mövenpick',
+    gift_subtitle: 'Sevdikləriniz üçün mükəmməl hədiyyə',
+    select_amount: 'Məbləği seçin',
+    card_type_label: 'Kart növü',
+    digital: 'Rəqəmsal',
+    physical: 'Fiziki',
+    recipient_info: 'Alıcı məlumatları',
+    recipient_name: 'Alıcının adı',
+    recipient_email: 'Alıcının emaili',
+    personal_message: 'Şəxsi mesaj',
+    message_placeholder: 'Təbrik yazın...',
+    delivery_date: 'Çatdırılma tarixi',
+    delivery_address: 'Çatdırılma ünvanı',
+    address_placeholder: 'Küçə, ev, mənzil',
+    city: 'Şəhər',
+    postal_code: 'Poçt indeksi',
+    customer: 'Müştəri',
+    order_btn: 'Sifariş et',
+    order_complete: 'Hədiyyə kartı sifariş olundu!',
+    gift_code: 'Hədiyyə kartı kodu:',
+    amount: 'Məbləğ',
+    recipient: 'Alıcı',
+    card_type: 'Kart növü',
+    order_again: 'Yenidən sifariş et',
+    back_home: 'Ana səhifəyə qayıt',
+    please_login: 'Zəhmət olmasa, əvvəlcə qeydiyyatdan keçin!',
+    please_address: 'Zəhmət olmasa, fiziki kart üçün çatdırılma ünvanını daxil edin',
+    register_required: 'Qeydiyyat tələb olunur',
+    please_register: 'Hədiyyə kartı sifariş etmək üçün qeydiyyatdan keçin',
+    guest_reviews: 'Qonaq rəyləri',
+    share_experience: 'Təcrübənizi bölüşün və başqalarına mükəmməl tətil seçməyə kömək edin',
+    leave_review: 'Rəy bildir',
+    service: 'Xidmət',
+    your_rating: 'Qiymətləndirməniz',
+    your_review: 'Rəyiniz',
+    review_placeholder: 'Təcrübəniz haqqında bizə məlumat verin...',
+    publish_review: 'Rəyi dərc et',
+    sending: 'Göndərilir...',
+    filter: 'Filtrlə',
+    sort: 'Sırala',
+    newest: 'Ən yenilər',
+    oldest: 'Ən köhnələr',
+    highest_rating: 'Ən yüksək reytinq',
+    lowest_rating: 'Ən aşağı reytinq',
+    most_liked: 'Ən populyarlar',
+    no_reviews: 'Hələ rəy yoxdur',
+    be_first: 'Rəy bildirən ilk şəxs olun!',
+    all_services: 'Bütün xidmətlər',
+    hotel_services: 'Ümumi otel',
+    login_to_review: 'Rəy bildirmək üçün daxil olun',
+    login_btn: 'Daxil ol',
+    review_added: 'Rəyiniz uğurla əlavə olundu!',
+    please_login_to_review: 'Rəy bildirmək üçün daxil olun',
+    enter_review_text: 'Zəhmət olmasa rəy mətnini daxil edin',
+    please_login_to_like: 'Rəyləri bəyənmək üçün daxil olun',
+    no_permission: 'Bu rəyi silmək üçün icazəniz yoxdur',
+    delete_review_confirm: 'Bu rəyi silmək istədiyinizə əminsiniz?',
+    please_login_to_report: 'Rəyə şikayət etmək üçün daxil olun',
+    report_sent: 'Şikayət moderatorlara göndərildi',
+    report: 'Şikayət et',
+    services_list: {
+      bbq: 'BBQ şam yeməyi',
+      spa: 'SPA istirahəti',
+      transfer: 'Hava limanı transferi',
+      kids: 'Uşaq klubu',
+      romantic: 'Romantik şam yeməyi',
+      hotel: 'Ümumi otel'
+    },
+    services: {
+      bbq: 'Dəniz kənarında BBQ şam yeməyi',
+      spa: 'SPA istirahət paketi',
+      transfer: 'Hava limanı transferi',
+      kids: 'Uşaq klubu fəaliyyətləri',
+      romantic: 'Romantik şam yeməyi / Tur'
+    },
+    categories: {
+      seafood: 'Dəniz məhsulları və Qril',
+      wellness: 'Sağlamlıq',
+      transport: 'Nəqliyyat',
+      family: 'Ailə',
+      special: 'Xüsusi'
+    }
+  }
 };
 
-// Список языков для отображения в селекторе
+// Список языков для отображения в селекторе (ДОБАВЛЯЕМ АЗЕРБАЙДЖАНСКИЙ)
 export const languageList = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
@@ -978,7 +1116,8 @@ export const languageList = [
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'ko', name: '한국어', flag: '🇰🇷' },
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' }
+  { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'az', name: 'Azərbaycan', flag: '🇦🇿' }  // ← ДОБАВЛЕНО
 ];
 
 // Функция для получения перевода
@@ -997,7 +1136,7 @@ export const getTranslation = (lang, key) => {
   return typeof value === 'string' ? value : key;
 };
 
-// Функция для получения вложенных переводов (например, services.bbq)
+// Функция для получения вложенных переводов
 export const getNestedTranslation = (lang, category, key) => {
   try {
     return translations[lang]?.[category]?.[key] || translations.en[category]?.[key] || key;
