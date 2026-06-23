@@ -275,4 +275,599 @@ const GiftCard = ({ lang, setLang, t }) => {
       postal_code: 'Poçt indeksi',
       customer: 'Müştəri',
       order_btn: 'Sifariş et',
-      order_complete: 'Hədiyyə kartı sif
+      order_complete: 'Hədiyyə kartı sifariş olundu!',
+      gift_code: 'Hədiyyə kartı kodu:',
+      amount: 'Məbləğ',
+      recipient: 'Alıcı',
+      card_type: 'Kart növü',
+      order_again: 'Yenidən sifariş et',
+      back_home: 'Ana səhifəyə qayıt',
+      please_login: 'Zəhmət olmasa, əvvəlcə qeydiyyatdan keçin!',
+      please_address: 'Zəhmət olmasa, fiziki kart üçün çatdırılma ünvanını daxil edin',
+      register_required: 'Qeydiyyat tələb olunur',
+      please_register: 'Hədiyyə kartı sifariş etmək üçün qeydiyyatdan keçin'
+    }
+  };
+
+  const gt = (key) => {
+    return translations[lang]?.[key] || translations.en[key];
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setGiftData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const generateGiftCode = () => {
+    const prefix = 'GIFT';
+    const random = Math.floor(100000 + Math.random() * 900000);
+    const date = new Date().getFullYear();
+    return `${prefix}-${random}-${date}`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!user) {
+      alert(gt('please_login'));
+      return;
+    }
+
+    if (giftData.cardType === 'physical') {
+      if (!giftData.deliveryAddress || !giftData.deliveryCity) {
+        alert(gt('please_address'));
+        return;
+      }
+    }
+
+    const code = generateGiftCode();
+    setGiftCode(code);
+    
+    const giftOrders = JSON.parse(localStorage.getItem('gift_orders') || '[]');
+    giftOrders.push({
+      id: Date.now(),
+      userId: user.id,
+      userName: user.name,
+      ...giftData,
+      giftCode: code,
+      status: 'active',
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem('gift_orders', JSON.stringify(giftOrders));
+    
+    setOrderComplete(true);
+  };
+
+  const resetForm = () => {
+    setStep(1);
+    setOrderComplete(false);
+    setGiftData({
+      amount: '1000',
+      recipientName: '',
+      recipientEmail: '',
+      message: '',
+      deliveryDate: '',
+      cardType: 'digital',
+      deliveryAddress: '',
+      deliveryCity: '',
+      deliveryPostalCode: '',
+      deliveryCountry: 'Thailand'
+    });
+    setGiftCode('');
+  };
+
+  if (!user) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <div style={styles.icon}>🔐</div>
+          <h2 style={styles.title}>{gt('register_required')}</h2>
+          <p style={styles.text}>{gt('please_register')}</p>
+          <Link to="/" style={styles.registerBtn}>{gt('register_btn') || 'Зарегистрироваться'}</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (orderComplete) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.successCard}>
+          <div style={styles.successIcon}>🎉</div>
+          <h2 style={styles.successTitle}>{gt('order_complete')}</h2>
+          <div style={styles.codeBox}>
+            <p style={styles.codeLabel}>{gt('gift_code')}</p>
+            <div style={styles.code}>{giftCode}</div>
+          </div>
+          <div style={styles.orderDetails}>
+            <p><strong>{gt('amount')}:</strong> {giftData.amount} THB</p>
+            <p><strong>{gt('recipient')}:</strong> {giftData.recipientName}</p>
+            <p><strong>{gt('card_type')}:</strong> {giftData.cardType === 'digital' ? gt('digital') : gt('physical')}</p>
+            {giftData.cardType === 'physical' && (
+              <>
+                <p><strong>{gt('delivery_address')}:</strong></p>
+                <p>{giftData.deliveryAddress}</p>
+                <p>{giftData.deliveryCity}, {giftData.deliveryPostalCode}</p>
+                <p>{giftData.deliveryCountry}</p>
+              </>
+            )}
+          </div>
+          <div style={styles.buttonsRow}>
+            <button onClick={resetForm} style={styles.newOrderBtn}>{gt('order_again')}</button>
+            <Link to="/" style={styles.homeBtn}>🏠 {gt('back_home')}</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.headerTop}>
+          <Link to="/" style={styles.homeLink}>🏠 {gt('back_home')}</Link>
+          <div style={styles.langSelector}>
+            {languageList.map(l => (
+              <button
+                key={l.code}
+                onClick={() => setLang(l.code)}
+                style={{
+                  ...styles.langBtn,
+                  ...(lang === l.code ? styles.langBtnActive : {})
+                }}
+                title={l.name}
+              >
+                {l.flag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={styles.header}>
+          <div style={styles.headerIcon}>🎁</div>
+          <h1 style={styles.mainTitle}>{gt('gift_cards')}</h1>
+          <p style={styles.subtitle}>{gt('gift_subtitle')}</p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.section}>
+            <label style={styles.sectionLabel}>{gt('select_amount')}</label>
+            <div style={styles.amountGrid}>
+              {amounts.map(amount => (
+                <button
+                  key={amount.value}
+                  type="button"
+                  onClick={() => setGiftData(prev => ({ ...prev, amount: amount.value }))}
+                  style={{
+                    ...styles.amountBtn,
+                    ...(giftData.amount === amount.value ? styles.amountBtnActive : {})
+                  }}
+                >
+                  <span style={styles.amountIcon}>{amount.icon}</span>
+                  <span style={styles.amountValue}>{amount.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={styles.section}>
+            <label style={styles.sectionLabel}>{gt('card_type_label')}</label>
+            <div style={styles.typeGrid}>
+              <button
+                type="button"
+                onClick={() => setGiftData(prev => ({ ...prev, cardType: 'digital' }))}
+                style={{
+                  ...styles.typeBtn,
+                  ...(giftData.cardType === 'digital' ? styles.typeBtnActive : {})
+                }}
+              >
+                <span>📧</span>
+                <span>{gt('digital')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setGiftData(prev => ({ ...prev, cardType: 'physical' }))}
+                style={{
+                  ...styles.typeBtn,
+                  ...(giftData.cardType === 'physical' ? styles.typeBtnActive : {})
+                }}
+              >
+                <span>💳</span>
+                <span>{gt('physical')}</span>
+              </button>
+            </div>
+          </div>
+
+          <div style={styles.section}>
+            <label style={styles.sectionLabel}>{gt('recipient_info')}</label>
+            <input
+              type="text"
+              name="recipientName"
+              placeholder={gt('recipient_name')}
+              value={giftData.recipientName}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+            <input
+              type="email"
+              name="recipientEmail"
+              placeholder={gt('recipient_email')}
+              value={giftData.recipientEmail}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.section}>
+            <label style={styles.sectionLabel}>{gt('personal_message')}</label>
+            <textarea
+              name="message"
+              placeholder={gt('message_placeholder')}
+              value={giftData.message}
+              onChange={handleChange}
+              rows="3"
+              style={styles.textarea}
+            />
+          </div>
+
+          <div style={styles.section}>
+            <label style={styles.sectionLabel}>{gt('delivery_date')}</label>
+            <input
+              type="date"
+              name="deliveryDate"
+              value={giftData.deliveryDate}
+              onChange={handleChange}
+              style={styles.input}
+            />
+          </div>
+
+          {giftData.cardType === 'physical' && (
+            <div style={styles.section}>
+              <label style={styles.sectionLabel}>📍 {gt('delivery_address')}</label>
+              <input
+                type="text"
+                name="deliveryAddress"
+                placeholder={gt('address_placeholder')}
+                value={giftData.deliveryAddress}
+                onChange={handleChange}
+                required
+                style={styles.input}
+              />
+              <div style={styles.addressRow}>
+                <input
+                  type="text"
+                  name="deliveryCity"
+                  placeholder={gt('city')}
+                  value={giftData.deliveryCity}
+                  onChange={handleChange}
+                  required
+                  style={{...styles.input, flex: 1}}
+                />
+                <input
+                  type="text"
+                  name="deliveryPostalCode"
+                  placeholder={gt('postal_code')}
+                  value={giftData.deliveryPostalCode}
+                  onChange={handleChange}
+                  style={{...styles.input, width: '120px'}}
+                />
+              </div>
+              <select
+                name="deliveryCountry"
+                value={giftData.deliveryCountry}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="Thailand">Таиланд</option>
+                <option value="Russia">Россия</option>
+                <option value="China">Китай</option>
+                <option value="Japan">Япония</option>
+                <option value="Korea">Корея</option>
+                <option value="Vietnam">Вьетнам</option>
+              </select>
+            </div>
+          )}
+
+          <div style={styles.userInfo}>
+            <p style={styles.userInfoText}>👤 {gt('customer')}: {user.name}</p>
+            <p style={styles.userInfoText}>
+              {user.phone ? `📞 ${user.phone}` : user.email ? `📧 ${user.email}` : ''}
+            </p>
+          </div>
+
+          <button type="submit" style={styles.submitBtn}>
+            {gt('order_btn')}
+          </button>
+        </form>
+
+        <div style={styles.footerLinks}>
+          <Link to="/" style={styles.footerLink}>🏠 {gt('back_home')}</Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const styles = {
+  container: {
+    minHeight: 'calc(100vh - 200px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '40px 20px',
+    background: '#f5f0e8'
+  },
+  card: {
+    maxWidth: '600px',
+    width: '100%',
+    background: 'white',
+    borderRadius: '20px',
+    padding: '40px',
+    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+    position: 'relative'
+  },
+  headerTop: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+    flexWrap: 'wrap',
+    gap: '10px'
+  },
+  homeLink: {
+    color: '#c8a86b',
+    textDecoration: 'none',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    padding: '8px 16px',
+    background: '#f5f0e8',
+    borderRadius: '20px',
+    transition: 'background 0.3s'
+  },
+  langSelector: {
+    display: 'flex',
+    gap: '5px',
+    flexWrap: 'wrap'
+  },
+  langBtn: {
+    background: 'none',
+    border: '1px solid #e0e0e0',
+    borderRadius: '8px',
+    padding: '5px 8px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    transition: 'all 0.3s'
+  },
+  langBtnActive: {
+    borderColor: '#c8a86b',
+    background: '#fef5e8',
+    transform: 'scale(1.1)'
+  },
+  successCard: {
+    maxWidth: '500px',
+    width: '100%',
+    background: 'white',
+    borderRadius: '20px',
+    padding: '40px',
+    textAlign: 'center',
+    boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '30px'
+  },
+  headerIcon: {
+    fontSize: '48px',
+    marginBottom: '10px'
+  },
+  mainTitle: {
+    fontSize: '28px',
+    color: '#1a1a2e',
+    marginBottom: '10px'
+  },
+  subtitle: {
+    fontSize: '14px',
+    color: '#666'
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '25px'
+  },
+  section: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px'
+  },
+  sectionLabel: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#333'
+  },
+  amountGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+    gap: '10px'
+  },
+  amountBtn: {
+    padding: '15px',
+    background: '#f5f5f5',
+    border: '2px solid #e0e0e0',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '5px',
+    transition: 'all 0.3s'
+  },
+  amountBtnActive: {
+    borderColor: '#c8a86b',
+    background: '#fef5e8'
+  },
+  amountIcon: {
+    fontSize: '24px'
+  },
+  amountValue: {
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+  typeGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '15px'
+  },
+  typeBtn: {
+    padding: '15px',
+    background: '#f5f5f5',
+    border: '2px solid #e0e0e0',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    fontSize: '16px',
+    transition: 'all 0.3s'
+  },
+  typeBtnActive: {
+    borderColor: '#c8a86b',
+    background: '#fef5e8'
+  },
+  input: {
+    padding: '12px 15px',
+    border: '1px solid #e0e0e0',
+    borderRadius: '10px',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 0.3s'
+  },
+  textarea: {
+    padding: '12px 15px',
+    border: '1px solid #e0e0e0',
+    borderRadius: '10px',
+    fontSize: '14px',
+    fontFamily: 'inherit',
+    resize: 'vertical',
+    outline: 'none'
+  },
+  addressRow: {
+    display: 'flex',
+    gap: '10px'
+  },
+  userInfo: {
+    padding: '15px',
+    background: '#f5f0e8',
+    borderRadius: '10px'
+  },
+  userInfoText: {
+    margin: '5px 0',
+    fontSize: '14px',
+    color: '#555'
+  },
+  submitBtn: {
+    padding: '15px',
+    background: '#c8a86b',
+    color: 'white',
+    border: 'none',
+    borderRadius: '10px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'background 0.3s'
+  },
+  successIcon: {
+    fontSize: '64px',
+    marginBottom: '20px'
+  },
+  successTitle: {
+    fontSize: '24px',
+    color: '#1a1a2e',
+    marginBottom: '20px'
+  },
+  codeBox: {
+    background: '#f5f0e8',
+    padding: '20px',
+    borderRadius: '12px',
+    marginBottom: '20px'
+  },
+  codeLabel: {
+    fontSize: '12px',
+    color: '#666',
+    marginBottom: '5px'
+  },
+  code: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#c8a86b',
+    fontFamily: 'monospace'
+  },
+  orderDetails: {
+    textAlign: 'left',
+    padding: '15px',
+    background: '#f5f5f5',
+    borderRadius: '10px',
+    marginBottom: '20px'
+  },
+  buttonsRow: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
+  },
+  newOrderBtn: {
+    padding: '12px 25px',
+    background: '#c8a86b',
+    color: 'white',
+    border: 'none',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    fontSize: '14px'
+  },
+  homeBtn: {
+    padding: '12px 25px',
+    background: '#1a1a2e',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '10px',
+    fontSize: '14px',
+    display: 'inline-block'
+  },
+  registerBtn: {
+    display: 'inline-block',
+    padding: '12px 25px',
+    background: '#c8a86b',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '10px',
+    marginTop: '20px'
+  },
+  icon: {
+    fontSize: '48px',
+    marginBottom: '20px'
+  },
+  title: {
+    fontSize: '24px',
+    color: '#1a1a2e',
+    marginBottom: '10px'
+  },
+  text: {
+    fontSize: '14px',
+    color: '#666'
+  },
+  footerLinks: {
+    textAlign: 'center',
+    marginTop: '20px',
+    paddingTop: '20px',
+    borderTop: '1px solid #eee'
+  },
+  footerLink: {
+    color: '#c8a86b',
+    textDecoration: 'none',
+    fontSize: '14px'
+  }
+};
+
+export default GiftCard;
