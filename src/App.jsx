@@ -87,15 +87,6 @@ function App() {
     comment: ''
   });
 
-  const languageList = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳'}
-  { code: 'az', name: 'Azərbaycan', flag: '🇦🇿' } ]
   useEffect(() => {
     const savedLang = getLanguage();
     if (savedLang && translations[savedLang]) {
@@ -385,7 +376,7 @@ function App() {
                   className="social-link"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                  📺
+                  📺 YouTube
                 </a>
               </div>
             </div>
