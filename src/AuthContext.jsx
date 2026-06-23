@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { getUser, saveUser, logoutUser, registerUser, isPhoneRegistered, isEmailRegistered, loginUser } from './dataService';
 
 const AuthContext = createContext();
 
@@ -9,31 +10,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('hotel_user');
+    const savedUser = getUser();
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      setUser(savedUser);
     }
     setLoading(false);
   }, []);
 
-  // Проверка существования номера телефона
-  const isPhoneRegistered = (phone) => {
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    return users.some(u => u.phone === phone);
-  };
-
-  // Проверка существования email
-  const isEmailRegistered = (email) => {
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    return users.some(u => u.email === email);
-  };
-
-  // Генерация проверочного кода
   const generateVerificationCode = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
-  // Регистрация по номеру телефона с верификацией
   const registerByPhone = (phone, name, verificationCode, enteredCode) => {
     if (verificationCode !== enteredCode) {
       throw new Error('Неверный проверочный код');
@@ -43,24 +30,20 @@ export const AuthProvider = ({ children }) => {
       throw new Error('Этот номер телефона уже зарегистрирован');
     }
 
-    const newUser = {
-      id: Date.now(),
+    const newUser = registerUser({
       name,
       phone,
       email: null,
-      provider: 'phone',
-      createdAt: new Date().toISOString()
-    };
+      provider: 'phone'
+    });
     
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    users.push(newUser);
-    localStorage.setItem('hotel_users', JSON.stringify(users));
-    localStorage.setItem('hotel_user', JSON.stringify(newUser));
-    setUser(newUser);
-    return newUser;
+    if (newUser) {
+      setUser(newUser);
+      return newUser;
+    }
+    throw new Error('Ошибка регистрации');
   };
 
-  // Регистрация по email с верификацией
   const registerByEmail = (email, name, password, verificationCode, enteredCode) => {
     if (verificationCode !== enteredCode) {
       throw new Error('Неверный проверочный код');
@@ -70,95 +53,32 @@ export const AuthProvider = ({ children }) => {
       throw new Error('Этот email уже зарегистрирован');
     }
 
-    const newUser = {
-      id: Date.now(),
+    const newUser = registerUser({
       name,
       email,
       password,
       phone: null,
-      provider: 'email',
-      createdAt: new Date().toISOString()
-    };
+      provider: 'email'
+    });
     
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    users.push(newUser);
-    localStorage.setItem('hotel_users', JSON.stringify(users));
-    localStorage.setItem('hotel_user', JSON.stringify(newUser));
-    setUser(newUser);
-    return newUser;
-  };
-
-  // Регистрация через соцсети
-  const registerByGoogle = (name, email) => {
-    const newUser = {
-      id: Date.now(),
-      name: name || 'Google User',
-      email: email || 'user@gmail.com',
-      provider: 'google',
-      createdAt: new Date().toISOString()
-    };
-    
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    users.push(newUser);
-    localStorage.setItem('hotel_users', JSON.stringify(users));
-    localStorage.setItem('hotel_user', JSON.stringify(newUser));
-    setUser(newUser);
-    return newUser;
-  };
-
-  const registerByFacebook = (name, email) => {
-    const newUser = {
-      id: Date.now(),
-      name: name || 'Facebook User',
-      email: email || 'user@facebook.com',
-      provider: 'facebook',
-      createdAt: new Date().toISOString()
-    };
-    
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    users.push(newUser);
-    localStorage.setItem('hotel_users', JSON.stringify(users));
-    localStorage.setItem('hotel_user', JSON.stringify(newUser));
-    setUser(newUser);
-    return newUser;
-  };
-
-  const registerByVK = (name, email) => {
-    const newUser = {
-      id: Date.now(),
-      name: name || 'VK User',
-      email: email || 'user@vk.com',
-      provider: 'vk',
-      createdAt: new Date().toISOString()
-    };
-    
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    users.push(newUser);
-    localStorage.setItem('hotel_users', JSON.stringify(users));
-    localStorage.setItem('hotel_user', JSON.stringify(newUser));
-    setUser(newUser);
-    return newUser;
-  };
-
-  // Вход в аккаунт
-  const login = (identifier, password) => {
-    const users = JSON.parse(localStorage.getItem('hotel_users') || '[]');
-    
-    const user = users.find(u => 
-      (u.email === identifier || u.phone === identifier) && u.password === password
-    );
-    
-    if (!user) {
-      throw new Error('Неверный email/телефон или пароль');
+    if (newUser) {
+      setUser(newUser);
+      return newUser;
     }
-    
-    localStorage.setItem('hotel_user', JSON.stringify(user));
-    setUser(user);
-    return user;
+    throw new Error('Ошибка регистрации');
+  };
+
+  const login = (identifier, password) => {
+    const user = loginUser(identifier, password);
+    if (user) {
+      setUser(user);
+      return user;
+    }
+    throw new Error('Неверный email/телефон или пароль');
   };
 
   const logout = () => {
-    localStorage.removeItem('hotel_user');
+    logoutUser();
     setUser(null);
   };
 
@@ -168,9 +88,6 @@ export const AuthProvider = ({ children }) => {
       loading,
       registerByPhone,
       registerByEmail,
-      registerByGoogle,
-      registerByFacebook,
-      registerByVK,
       login,
       logout,
       isPhoneRegistered,
